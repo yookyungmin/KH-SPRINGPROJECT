@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- ctrl+ space하면 자료형을 가져온다  SamsungTV = new SamsungTV(); 와 동일, 인스턴스를 만들어놓는다. -->
+	<!--  
+	<bean id = "tv" class="kh.spring.tools.LgTV" lazy-init="false" > 
+	 	
+	 	<constructor-arg ref="speaker"/>
+	 	<constructor-arg value="1000"/>
+	
+	 	
+	</bean>
+	-->
+	
+ 	<bean id = "tv" class="kh.spring.tools.LgTV" lazy-init="false" > 
+	 	
+	 		<property name="speaker" ref="speaker"></property>
+	 		<property name="price" value="200000"></property>
+	
+	 	
+	</bean>
+
+
+	 	<bean id="speaker" class="kh.spring.tools.SonySpeaker"></bean>
+	
+
+
+	<bean id = "tv-check" class="kh.spring.tools.SamsungTV" lazy-init="false" > 
+	 	
+	 		<constructor-arg ref="gsonn"></constructor-arg>
+	
+	 	
+	</bean>
+	
+	<bean id="gsonn" class="com.google.gson.Gson"></bean>
+	
+<!-- 제어의 역전 / 인스턴스에 대한 제어건이 개발자가 아닌 스프링에게 있다 , 스코프, 사이클, 패턴등을 스프링이 관리
+		Inversion Of Control -> IOC , Dependency LooKup -> DL 의존성 검색-->
+	<!-- 스프링에서 인스턴스들을 bean이라 한다, bean은 모든 패턴이 싱글톤 -->
+	
+	<!-- lazy-init="true" 하면 스프링 컨테이너 생성시 만들어지지않고 getBean시 만들어진다 
+		scope="prototype" =기본 싱글톤패턴 해제-->
+		
+	<!-- <constructor-arg ref="speaker"></constructor-arg> 
+		<constructor-arg value="1000"></constructor-arg>
+		참조형 타입이면 ref
+		기본형 타입이면 value
+		di / dependency injection
+		LgTV bean을 생성할때 생성자 매개변수로 speaker를 넣어준다 생성자 주입
+		speaker 인스턴스를 생성자 매개변수로 주입(constructor Injection)
+		
+		<property name=""></property> (setter Injection) 세터주입
+
+		//소스코드의 의존도를 낮추고 xml에 책임을 넘겨줌 
+	 -->
+</beans>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Message">
+	<insert id="insert">
+		insert into message values(message_seq.nextval,
+		#{writer}, #{message})
+		<selectKey order="AFTER" keyProperty="seq" resultType="int">
+			select message_seq.currval from dual
+		</selectKey>
+	</insert>
+	<!-- 싱글쿼테이션 안쓰면 ${writer}도 가능 -->
+
+	<select id="selectAll" resultType="kh.spring.dto.MessageDTO">
+		select * from message order by
+		1
+	</select>
+
+	<delete id="delete">
+		delete from message where seq = ${value}
+	</delete>
+	<!-- 가본형 단일 값 넘어올떈 value 쓰면 된다 #{value}로 싱글쿼테이션이 붙어도 오라클에서 숫자로 인식해서 비교해서 
+		상관없다 -->
+
+	<select id="selectBySeq" resultType="kh.spring.dto.MessageDTO">
+		select * from message where
+		seq=${value} order by 1
+	</select>
+
+	<select id="selectByCon" resultType="kh.spring.dto.MessageDTO">
+		select * from message where
+		${condition} like '%'||#{keyword}||'%'
+	</select>
+	<!-- 컬럼들어가는 구간이라 ${} like 구문 양쪽에는 % 가붙어야 함 -->
+
+	<select id="selectByMultiCon"
+		resultType="kh.spring.dto.MessageDTO">
+		select * from message
+
+		<trim prefix="where" prefixOverrides="and">
+			<!-- prefixOverrides : 접두사를 무효화 시키다. 맨 앞이 and 면 and 를 무효화 시키겠다. -->
+			<if test="writer !=null">
+				writer like '%'||#{writer}||'%'
+			</if>
+			<if test="message !=null">
+				and message like '%'||#{message}||'%'
+			</if>
+		</trim>
+		<!-- MyBatis에서는 trim(다듬다) 라는 기능 제공. trim 안에 텍스트가 있어야 동작함 -->
+	</select>
+	
+	
+	<!-- join으을 쓸때 -->
+	<select id="selectJoin" resultType="map">
+		select * from employee, department
+	</select>
+	
+	
+	
+</mapper>
